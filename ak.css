@@ -432,6 +432,7 @@ input:disabled, select:disabled {
     letter-spacing: 0.02em;
     line-height: 1.1;
     flex: 1;
+    text-align: center;
 }
 #owner {
     font-weight: 700;
@@ -464,6 +465,13 @@ input:disabled, select:disabled {
     min-height: 1.4rem;
     padding: 0.1rem 0.5rem;
     margin-top: 0.2rem;
+}
+.party-addr-line {
+    border-bottom: 1px solid #000;
+    min-height: 1.4rem;
+    padding: 0.1rem 0.5rem;
+    margin-top: 0.3rem;
+    font-size: 11px;
 }
 .bill-meta-cell {
     min-width: 200px;
