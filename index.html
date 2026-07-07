@@ -136,6 +136,10 @@
                 <input type="number" class="form-control" id="orai1" placeholder="0" min="0" step="0.01">
             </div>
             <div class="col-6 col-sm-3">
+                <label class="form-label">Kata</label>
+                <input type="number" class="form-control" id="kata1" placeholder="0" min="0" step="0.01">
+            </div>
+            <div class="col-6 col-sm-3">
                 <label class="form-label">Note</label>
                 <input type="text" class="form-control" id="entrynote1" placeholder="Entry note">
             </div>
@@ -196,6 +200,10 @@
             <div class="ded-item">
                 <div class="ded-label">Warai</div>
                 <div class="ded-value" id="summaryOrai">—</div>
+            </div>
+            <div class="ded-item">
+                <div class="ded-label">Kata</div>
+                <div class="ded-value" id="summaryKata">—</div>
             </div>
         </div>
     </div>
@@ -300,6 +308,11 @@
                         <td></td><td></td><td></td><td></td>
                         <td class="tdbr"><b>KHOTI</b></td>
                         <td class="tdbr"><span id="khotix"></span></td>
+                    </tr>
+                    <tr>
+                        <td></td><td></td><td></td><td></td>
+                        <td class="tdbr"><b>KATA</b></td>
+                        <td class="tdbr"><span id="katax"></span></td>
                     </tr>
                     <tr>
                         <td></td>
@@ -429,20 +442,22 @@ function buildExtrasText(entry) {
     if (parseFloat(entry.entryAdvance) > 0) parts.push('Advance = ' + parseFloat(entry.entryAdvance));
     if (parseFloat(entry.entryKhoti)   > 0) parts.push('Khoti = '   + parseFloat(entry.entryKhoti));
     if (parseFloat(entry.entryOrai)    > 0) parts.push('Warai = '    + parseFloat(entry.entryOrai));
+    if (parseFloat(entry.entryKata)    > 0) parts.push('Kata = '    + parseFloat(entry.entryKata));
     if (entry.entryNote && entry.entryNote.trim()) parts.push(entry.entryNote.trim());
     return parts.join(' | ');
 }
 
 // ─── Deductions summary (live update) ────────────────────────────────────────
 function updateDeductionsSummary() {
-    var advance = 0, khoti = 0, orai = 0;
+    var advance = 0, khoti = 0, orai = 0, kata = 0;
     billEntries.forEach(function(e) {
         advance += parseFloat(e.entryAdvance) || 0;
         khoti   += parseFloat(e.entryKhoti)   || 0;
         orai    += parseFloat(e.entryOrai)    || 0;
+        kata    += parseFloat(e.entryKata)    || 0;
     });
     var card = document.getElementById('deductionsCard');
-    if (billEntries.length === 0 || (!advance && !khoti && !orai)) {
+    if (billEntries.length === 0 || (!advance && !khoti && !orai && !kata)) {
         card.style.display = 'none';
         return;
     }
@@ -450,6 +465,7 @@ function updateDeductionsSummary() {
     document.getElementById('summaryAdvance').textContent = advance ? advance.toFixed(2) : '—';
     document.getElementById('summaryKhoti').textContent   = khoti   ? khoti.toFixed(2)   : '—';
     document.getElementById('summaryOrai').textContent    = orai    ? orai.toFixed(2)    : '—';
+    document.getElementById('summaryKata').textContent    = kata    ? kata.toFixed(2)    : '—';
 }
 
 // ─── Render entries list ──────────────────────────────────────────────────────
@@ -537,6 +553,7 @@ function editEntry(idx) {
     document.getElementById('advance1').value     = entry.entryAdvance || '';
     document.getElementById('khoti1').value       = entry.entryKhoti   || '';
     document.getElementById('orai1').value        = entry.entryOrai    || '';
+    document.getElementById('kata1').value        = entry.entryKata    || '';
     document.getElementById('entrynote1').value   = entry.entryNote    || '';
 
     var btn = document.getElementById('addEntryBtn');
@@ -561,7 +578,7 @@ function cancelEdit() {
 
 function clearEntryForm() {
     ['date2','truckInput','particulars1','rate1','weight1','amount1',
-     'advance1','khoti1','orai1','entrynote1'].forEach(function(id) {
+     'advance1','khoti1','orai1','kata1','entrynote1'].forEach(function(id) {
         document.getElementById(id).value = '';
     });
     document.getElementById('truckSelect').value = '';
@@ -688,7 +705,8 @@ function addEntry() {
                      amountVal || noteVal ||
                      document.getElementById('advance1').value ||
                      document.getElementById('khoti1').value ||
-                     document.getElementById('orai1').value;
+                     document.getElementById('orai1').value ||
+                     document.getElementById('kata1').value;
     if (!hasContent) { showToast('Please fill at least one field'); return; }
 
     var rate   = parseFloat(rateVal)   || 0;
@@ -721,6 +739,7 @@ function addEntry() {
         entryAdvance:   document.getElementById('advance1').value,
         entryKhoti:     document.getElementById('khoti1').value,
         entryOrai:      document.getElementById('orai1').value,
+        entryKata:      document.getElementById('kata1').value,
         entryNote:      document.getElementById('entrynote1').value.trim()
     };
 
@@ -784,16 +803,18 @@ window.addEventListener('afterprint', unpadBillRows);
 
 // ─── Calculate totals ─────────────────────────────────────────────────────────
 function calculateTotals() {
-    var advance = 0, khoti = 0, orai = 0;
+    var advance = 0, khoti = 0, orai = 0, kata = 0;
     billEntries.forEach(function(e) {
         advance += parseFloat(e.entryAdvance) || 0;
         khoti   += parseFloat(e.entryKhoti)   || 0;
         orai    += parseFloat(e.entryOrai)    || 0;
+        kata    += parseFloat(e.entryKata)    || 0;
     });
 
     document.getElementById('advancex').textContent = advance ? advance.toFixed(2) : '';
     document.getElementById('khotix').textContent   = khoti   ? khoti.toFixed(2)   : '';
     document.getElementById('extraxx').textContent  = orai    ? orai.toFixed(2)    : '';
+    document.getElementById('katax').textContent    = kata    ? kata.toFixed(2)    : '';
 
     var total = 0;
     document.querySelectorAll('#billBody .amount-cell').forEach(function(cell) {
@@ -801,7 +822,7 @@ function calculateTotals() {
     });
     document.getElementById('sum').textContent = total.toFixed(2);
 
-    var balance = total - advance + khoti + orai;
+    var balance = total - advance + khoti + orai + kata;
     document.getElementById('balancex').textContent = balance.toFixed(2);
     NumToWord(Math.round(balance), 'rupeex');
     liveSync();
@@ -898,7 +919,7 @@ function resetAll() {
     resetAddBtn();
     document.getElementById('entryFullBadge').style.display = 'none';
 
-    ['tp','tpaddr','bo','sum','balancex','rupeex','advancex','khotix','extraxx']
+    ['tp','tpaddr','bo','sum','balancex','rupeex','advancex','khotix','extraxx','katax']
         .forEach(function(id) { document.getElementById(id).textContent = ''; });
 
     document.getElementById('bo').textContent = document.getElementById('bill').value;
