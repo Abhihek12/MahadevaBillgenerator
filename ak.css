@@ -460,18 +460,19 @@ input:disabled, select:disabled {
     padding: 0.3rem 0.5rem;
     min-height: 3rem;
 }
-.party-name-line {
-    border-bottom: 1px solid #000;
+.party-name-line,
+.party-addr-line {
+    display: flex;
+    align-items: baseline;
     min-height: 1.4rem;
     padding: 0.1rem 0.5rem;
     margin-top: 0.2rem;
 }
-.party-addr-line {
+.fill-blank {
+    flex: 1;
     border-bottom: 1px solid #000;
-    min-height: 1.4rem;
-    padding: 0.1rem 0.5rem;
-    margin-top: 0.3rem;
-    font-size: 11px;
+    padding: 0 0.3rem;
+    margin-left: 0.3rem;
 }
 .bill-meta-cell {
     min-width: 200px;
