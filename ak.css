@@ -412,18 +412,19 @@ input:disabled, select:disabled {
     margin-bottom: 0.2rem;
 }
 #logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    position: relative;
 }
 #aklogo {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
     width: 22%;
-    flex-shrink: 0;
+    max-width: 90px;
 }
 #aklogo img {
     width: 70%;
     max-width: 80px;
-    padding-left: 5%;
 }
 #ak {
     color: red;
@@ -431,7 +432,7 @@ input:disabled, select:disabled {
     font-weight: 900;
     letter-spacing: 0.02em;
     line-height: 1.1;
-    flex: 1;
+    width: 100%;
     text-align: center;
 }
 #owner {
